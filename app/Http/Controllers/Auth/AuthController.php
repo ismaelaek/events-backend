@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -17,7 +19,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $requst->name,
             'email' => $requst->email,
-            'password' => Hash::make($requst->password)
+            'password' => Hash::make($requst->password),
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -25,7 +27,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Registration successful',
             'user' => $user,
-            'tokern' => $token
+            'tokern' => $token,
         ], 201);
     }
 
@@ -33,9 +35,9 @@ class AuthController extends Controller
     {
         $credintials = $request->validated();
 
-        if(!Auth::attempt($credintials)) {
+        if (! Auth::attempt($credintials)) {
             return response()->json([
-                'message' => 'Email or passowrd incorrect'
+                'message' => 'Email or passowrd incorrect',
             ], 401);
         }
 
