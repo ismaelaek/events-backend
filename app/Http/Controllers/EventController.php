@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -33,5 +35,23 @@ class EventController extends Controller
         $events = $query->paginate(20);
 
         return EventResource::collection($events);
+    }
+
+    public function store(StoreEventRequest $request): JsonResponse
+    {
+        $event = auth()->user()->organizedEvents()->create($request->validated());
+
+        if ($event) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Event has been created succefully',
+                'data' => new EventResource($event),
+            ], 201);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Event could not be created',
+        ], 500);
     }
 }
