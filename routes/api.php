@@ -12,6 +12,8 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/events', [EventController::class, 'index'])->name('events.index');
-    Route::post('/store-event', [EventController::class, 'store'])->name('events.store');
+    Route::get('/events', [EventController::class, 'index'])->name('event.index');
+    Route::get('/events/{event}', [EventController::class, 'show'])->name('event.show');
+    Route::post('/store-event', [EventController::class, 'store'])->name('event.store');
+    Route::put('/{event}/edit', [EventController::class, 'update'])->name('event.update');
 });
