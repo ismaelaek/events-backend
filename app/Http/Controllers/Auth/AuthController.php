@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -25,5 +27,25 @@ class AuthController extends Controller
             'user' => $user,
             'tokern' => $token
         ], 201);
+    }
+
+    public function login(LoginRequest $request): JsonResponse
+    {
+        $credintials = $request->validated();
+
+        if(!Auth::attempt($credintials)) {
+            return response()->json([
+                'message' => 'Email or passowrd incorrect'
+            ], 401);
+        }
+
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
     }
 }
