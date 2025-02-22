@@ -25,6 +25,7 @@ class EventFactory extends Factory
             'name' => $name = $this->faker->sentence(),
             'slug' => Str::slug($name),
             'description' => $this->faker->paragraph(rand(50, 100)),
+            'location' => $this->faker->city(),
             'is_private' => $this->faker->boolean(),
             'max_participants' => random_int(5, 100),
             'start_date' => $start = now()->addDays(rand(1, 356)),

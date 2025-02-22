@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description');
+            $table->string('location')->nullable();
             $table->boolean('is_private')->default(0);
             $table->unsignedInteger('max_participants')->nullable();
             $table->date('start_date');
