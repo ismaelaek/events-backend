@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 
 class EventParticipantController extends Controller
 {
-    public function joinEvent($eventId): JsonResponse
+    public function joinEvent(int $eventId): JsonResponse
     {
         $user = auth()->user();
         $event = Event::find($eventId);
@@ -62,5 +62,34 @@ class EventParticipantController extends Controller
                 ? 'Join request sent and awaiting approval.'
                 : 'You have successfully joined the event.',
         ], 201);
+    }
+
+    public function leaveEvent(int $eventId): JsonResponse
+    {
+        $user = auth()->user();
+        $eventParticipant = EventParticipant::where('user_id', $user->id)->where('event_id', $eventId)->first();
+
+        if (! $eventParticipant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not a participant in this event.',
+            ], 404);
+        }
+
+        if ($eventParticipant->status === EventParticipantStatus::PENDING->value) {
+            $eventParticipant->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Join request has been canceled.',
+            ], 200);
+        }
+
+        $eventParticipant->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'You have successfully left the event.',
+        ], 200);
     }
 }
