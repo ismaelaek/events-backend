@@ -23,6 +23,13 @@ class EventParticipantController extends Controller
             ], 404);
         }
 
+        if ($event->max_participants && $event->participants()->where('status', 'accepted')->count() === $event->max_participants) {
+            return response()->json([
+            'success' => false,
+            'message' => 'Event is full',
+            ], 403);
+        }
+
         if ($event->user_id === $user->id) {
             return response()->json([
                 'success' => false,
@@ -107,6 +114,11 @@ class EventParticipantController extends Controller
     {
         if ($event->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        if ($status === 'accepted' && $event->max_participants 
+            && $event->participants()->where('status', 'accepted')->count() === $event->max_participants) {
+            return response()->json(['message' => 'Event is full'], 403);
         }
 
         $participant = EventParticipant::where('event_id', $event->id)
