@@ -96,6 +96,16 @@ class EventParticipantController extends Controller
 
     public function acceptJoinRequest(Event $event, User $user): JsonResponse
     {
+        return $this->changeParticipantStatus($event, $user, EventParticipantStatus::ACCEPTED->value);
+    }
+
+    public function rejectJoinRequest(Event $event, User $user): JsonResponse
+    {
+        return $this->changeParticipantStatus($event, $user, EventParticipantStatus::REJECTED->value);
+    }
+
+    private function changeParticipantStatus(Event $event, User $user, string $status): JsonResponse
+    {
         if ($event->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -104,12 +114,12 @@ class EventParticipantController extends Controller
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        if ($participant->status === EventParticipantStatus::ACCEPTED->value) {
-            return response()->json(['message' => 'Participant is already accepted'], 409);
+        if ($participant->status === $status) {
+            return response()->json(['message' => "Participant is already $status"], 409);
         }
 
-        $participant->update(['status' => EventParticipantStatus::ACCEPTED->value]);
+        $participant->update(['status' => $status]);
 
-        return response()->json(['message' => 'Participant accepted']);
+        return response()->json(['message' => "Participant $status"]);
     }
 }
