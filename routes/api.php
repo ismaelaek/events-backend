@@ -22,4 +22,5 @@ Route::middleware('auth:sanctum')->prefix('events')->group(function () {
 
     Route::post('/{event}/join', [EventParticipantController::class, 'joinEvent']);
     Route::post('/{event}/leave', [EventParticipantController::class, 'leaveEvent']);
+    Route::post('/{event}/accept/{user}', [EventParticipantController::class, 'acceptJoinRequest']);
 });

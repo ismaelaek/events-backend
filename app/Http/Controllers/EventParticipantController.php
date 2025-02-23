@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\EventParticipantStatus;
 use App\Models\Event;
 use App\Models\EventParticipant;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 class EventParticipantController extends Controller
@@ -91,5 +92,24 @@ class EventParticipantController extends Controller
             'success' => true,
             'message' => 'You have successfully left the event.',
         ], 200);
+    }
+
+    public function acceptJoinRequest(Event $event, User $user): JsonResponse
+    {
+        if ($event->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $participant = EventParticipant::where('event_id', $event->id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        if ($participant->status === EventParticipantStatus::ACCEPTED->value) {
+            return response()->json(['message' => 'Participant is already accepted'], 409);
+        }
+
+        $participant->update(['status' => EventParticipantStatus::ACCEPTED->value]);
+
+        return response()->json(['message' => 'Participant accepted']);
     }
 }
