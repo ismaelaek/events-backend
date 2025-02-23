@@ -6,7 +6,7 @@ namespace App\Enums;
 
 use App\Traits\EnumToArray;
 
-enum EveentParticipantStatus: string
+enum EventParticipantStatus: string
 {
     use EnumToArray;
 
