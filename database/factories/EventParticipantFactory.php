@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\EventParticipantStatus;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +23,7 @@ class EventParticipantFactory extends Factory
         return [
             'user_id' => User::factory(),
             'event_id' => Event::factory(),
-            'status' => $this->faker->randomElement(EventParticipantStatus::cases())->value,
+            'status' => $this->faker->randomElement(['pending', 'accepted', 'rejected']),
         ];
     }
 }

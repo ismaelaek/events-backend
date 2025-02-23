@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\EventParticipantStatus;
 use App\Models\Event;
 use App\Models\EventParticipant;
 use App\Models\User;
@@ -37,7 +36,7 @@ class EventParticipantController extends Controller
             ->first();
 
         if ($existingParticipant) {
-            $message = $existingParticipant->status === EventParticipantStatus::PENDING->value
+            $message = $existingParticipant->status === 'pending'
                 ? 'Join request already sent and awaiting approval.'
                 : 'You are already a participant in this event.';
 
@@ -48,8 +47,8 @@ class EventParticipantController extends Controller
         }
 
         $status = $event->is_private
-            ? EventParticipantStatus::PENDING->value
-            : EventParticipantStatus::ACCEPTED->value;
+            ? 'pending'
+            : 'accepted';
 
         EventParticipant::create([
             'user_id' => $user->id,
@@ -77,7 +76,7 @@ class EventParticipantController extends Controller
             ], 404);
         }
 
-        if ($eventParticipant->status === EventParticipantStatus::PENDING->value) {
+        if ($eventParticipant->status === 'pending') {
             $eventParticipant->delete();
 
             return response()->json([
@@ -96,12 +95,12 @@ class EventParticipantController extends Controller
 
     public function acceptJoinRequest(Event $event, User $user): JsonResponse
     {
-        return $this->changeParticipantStatus($event, $user, EventParticipantStatus::ACCEPTED->value);
+        return $this->changeParticipantStatus($event, $user, 'accepted');
     }
 
     public function rejectJoinRequest(Event $event, User $user): JsonResponse
     {
-        return $this->changeParticipantStatus($event, $user, EventParticipantStatus::REJECTED->value);
+        return $this->changeParticipantStatus($event, $user, 'rejected');
     }
 
     private function changeParticipantStatus(Event $event, User $user, string $status): JsonResponse
