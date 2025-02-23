@@ -81,4 +81,15 @@ class EventController extends Controller
             'message' => 'Event could not be updated',
         ], 500);
     }
+
+    public function destroy(Event $event): JsonResponse
+    {
+        if ($event->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $event->delete();
+
+        return response()->json(['message' => 'Event deleted successfully']);
+    }
 }
