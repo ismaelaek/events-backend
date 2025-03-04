@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->prefix('events')->group(function () {
     Route::post('/create', [EventController::class, 'store'])->name('events.store');
     Route::put('/{event}/edit', [EventController::class, 'update'])->name('events.update');
     Route::delete('/{event}', [EventController::class, 'destroy'])->name('events.destroy');
+    Route::get('/organized-events', [EventController::class, 'myEvents'])->name('events.myevents');
 
     Route::post('/{event}/join', [EventParticipantController::class, 'joinEvent']);
     Route::post('/{event}/leave', [EventParticipantController::class, 'leaveEvent']);

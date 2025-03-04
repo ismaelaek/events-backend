@@ -16,7 +16,8 @@ class EventController extends Controller
 {
     public function index(Request $request): JsonResource
     {
-        $query = Event::query();
+        $query = Event::query()
+            ->whereNot('user_id', auth()->id());
 
         if ($request->has('name')) {
             $query->where('name', 'like', '%'.$request->input('name').'%');
@@ -91,5 +92,12 @@ class EventController extends Controller
         $event->delete();
 
         return response()->json(['message' => 'Event deleted successfully']);
+    }
+
+    public function myEvents(): JsonResource
+    {
+        $events = auth()->user()->organizedEvents()->paginate(18);
+
+        return EventResource::collection($events);
     }
 }
