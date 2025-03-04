@@ -19,11 +19,11 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('events')->group(function () {
     Route::get('/', [EventController::class, 'index'])->name('events.index');
+    Route::get('/organized', [EventController::class, 'myEvents'])->name('events.myevents');
     Route::get('/{event}', [EventController::class, 'show'])->name('events.show');
     Route::post('/create', [EventController::class, 'store'])->name('events.store');
     Route::put('/{event}/edit', [EventController::class, 'update'])->name('events.update');
     Route::delete('/{event}', [EventController::class, 'destroy'])->name('events.destroy');
-    Route::get('/organized-events', [EventController::class, 'myEvents'])->name('events.myevents');
 
     Route::post('/{event}/join', [EventParticipantController::class, 'joinEvent']);
     Route::post('/{event}/leave', [EventParticipantController::class, 'leaveEvent']);

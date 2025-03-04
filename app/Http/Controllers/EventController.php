@@ -17,7 +17,8 @@ class EventController extends Controller
     public function index(Request $request): JsonResource
     {
         $query = Event::query()
-            ->whereNot('user_id', auth()->id());
+            ->whereNot('user_id', auth()->id())
+            ->where('start_date', '>=', now());
 
         if ($request->has('name')) {
             $query->where('name', 'like', '%'.$request->input('name').'%');
@@ -96,7 +97,7 @@ class EventController extends Controller
 
     public function myEvents(): JsonResource
     {
-        $events = auth()->user()->organizedEvents()->paginate(18);
+        $events = auth()->user()->organizedEvents;
 
         return EventResource::collection($events);
     }
