@@ -33,7 +33,7 @@ class EventController extends Controller
             ]);
         }
 
-        $events = $query->paginate(20);
+        $events = $query->paginate(18);
 
         return EventResource::collection($events);
     }
