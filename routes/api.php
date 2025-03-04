@@ -20,6 +20,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->prefix('events')->group(function () {
     Route::get('/', [EventController::class, 'index'])->name('events.index');
     Route::get('/organized', [EventController::class, 'myEvents'])->name('events.myevents');
+    Route::get('/joined-events', [EventController::class, 'joinedEvents'])->name('events.joined');
     Route::get('/{event}', [EventController::class, 'show'])->name('events.show');
     Route::post('/create', [EventController::class, 'store'])->name('events.store');
     Route::put('/{event}/edit', [EventController::class, 'update'])->name('events.update');

@@ -101,4 +101,12 @@ class EventController extends Controller
 
         return EventResource::collection($events);
     }
+
+    public function joinedEvents(): JsonResource
+    {
+        $events = auth()->user()->eventParticipations()->with('event')->get()->pluck('event');
+
+        return EventResource::collection($events);
+    }
+
 }
