@@ -58,8 +58,9 @@ class EventController extends Controller
         ], 500);
     }
 
-    public function show(Event $event): JsonResponse
+    public function show(string $slug): JsonResponse
     {
+        $event = Event::where('slug', $slug)->first();
         return response()->json([
             'success' => true,
             'data' => new EventResource($event),
